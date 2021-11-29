@@ -1,0 +1,22 @@
+{
+  "name": "butt-cast",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node api.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "secret-stack": "^6.4.0",
+    "ssb-caps": "^1.1.0",
+    "ssb-db2": "^2.8.1",
+    "ssb-keys": "^8.2.0"
+  },
+  "devDependencies": {
+    "standard": "^16.0.4"
+  }
+}

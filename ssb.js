@@ -1,6 +1,5 @@
 const Stack = require('secret-stack')
 const caps = require('ssb-caps')
-const DB = require('ssb-db2')
 const ssbKeys = require('ssb-keys')
 const path = require('path')
 
@@ -12,7 +11,16 @@ module.exports = function ssb (opts = {}) {
   }
 
   const stack = Stack({ caps })
-    .use(DB)
+    .use(require('ssb-db2'))
+    .use(require('ssb-db2/compat/db'))
+    .use(require('ssb-db2/compat/history-stream'))
+    .use(require('ssb-db2/compat/feedstate'))
 
-  return stack(opts)
+  const ssb = stack(opts)
+
+  ssb.db.post(m => {
+    console.log(JSON.stringify(m, null, 2))
+  })
+
+  return ssb
 }

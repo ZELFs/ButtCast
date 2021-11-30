@@ -18,8 +18,8 @@ module.exports = function ssb (opts = {}) {
 
   const ssb = stack(opts)
 
-  ssb.db.post(m => {
-    console.log(JSON.stringify(m, null, 2))
+  ssb.db.post(msg => {
+    console.log(JSON.stringify(msg, null, 2))
   })
 
   return ssb

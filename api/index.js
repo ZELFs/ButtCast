@@ -1,5 +1,7 @@
 // here we don't use ";" 
 
+// Basically our main backend 
+
 /* STATES THE FUNCTIONS WE WILL USE */
 
 const express = require('express') // the way you include libraries, aka code other people made. Express is our webserver thingy.
@@ -31,6 +33,8 @@ app.get('/whoami', (req, res) => {
   res.send({ data: ssb.id }) // request and respond, shows what ID is in ssb. In this case we use a test SSB ID. To see how to interact, search express.js https://expressjs.com/en/starter/hello-world.html
 })
 
+
+// THIS ONE IS THE BASE FOR GETTING COMMENTS FOR SPECIFIC PODCAST 
 app.get('/comments/:podcastId', async (req, res) => {
     const {where, and, slowEqual, type, toPromise }  = require('ssb-db2/operators') // enables the commands to be used
     const comments = await ssb.db.query( 
@@ -70,3 +74,8 @@ app.post('/comment', (req, res) => {
 app.listen(3000) //listens to local host port 3000
 
 console.log('API running on http://localhost:3000/')
+
+
+// TASK for NEXT WEEK: make a fetch for all the podcasts 
+
+// Latest 10 comments no matter the podcast 

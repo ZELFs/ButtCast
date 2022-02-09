@@ -77,5 +77,4 @@ console.log('API running on http://localhost:3000/')
 
 
 // TASK for NEXT WEEK: make a fetch for all the podcasts 
-
 // Latest 10 comments no matter the podcast 

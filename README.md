@@ -1,7 +1,9 @@
 # Butt Cast
 
-Welcome! 
-This page will be updated as the project goes along. The text on this page has been edited by [@zelf](https://github.com/ZELFs) so far ~
+Welcome!
+
+This page will be updated as the project goes along. 
+
 
 ## Purpose
 
@@ -74,8 +76,7 @@ It is also possible to build directly in the browser yet that will not part of t
 - Publish
 
 
-
-
-
+______
+The text on this page has been edited by [@zelf](https://github.com/ZELFs) so far ~
 
 

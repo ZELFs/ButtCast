@@ -9,7 +9,7 @@ This page will be updated as the project goes along ~
 
 This project has three main purposes: 
 
-1. Build a cool app which enables people to async communicate with each other building on the distributed communication protocol SSB
+1. Make a cool app which enables people to async communicate with each other building on the distributed communication protocol SSB
 
 2. Serve as a way for me to learn how to code and build SSB apps
 

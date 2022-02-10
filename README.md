@@ -2,7 +2,7 @@
 
 Welcome!
 
-This page will be updated as the project goes along. 
+This page will be updated as the project goes along ~
 
 
 ## Purpose

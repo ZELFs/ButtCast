@@ -13,7 +13,7 @@ This project has three main purposes:
 
 2. Serve as a way for me to learn how to code and build SSB apps
 
-3. To help others with learning how to build apps by making a guide that even a beginner (such as myself) can follow based on the latest (09.02.22) tech in the SSB ecosystem utilizing metafeeds and room. 
+3. Help others with learning how to build apps by making a guide that even a beginner (such as myself) can follow based on the latest (09.02.22) tech in the SSB ecosystem utilizing metafeeds and room. 
 
 This project would not have been possible if not for the support of [@arj](https://github.com/arj03) and [@mix](https://github.com/mixmix) who are guiding me. Many thanks 🙏🌸
 

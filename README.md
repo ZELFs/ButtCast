@@ -66,10 +66,10 @@ It is also possible to build directly in the browser yet that will not part of t
 
 #### Sharing of the Data (through rooms and pubs)
 
-### Step 2 (building the UX (Paul + Eileen) )
+### Step 2 (building the UX (Potentially Paul + Eileen?) )
 - Build the UX
 
-### Step 3 - Bundle in Electron (André for electron)
+### Step 3 - Bundle in Electron (Mix is keen to support, potentially André for electron)
 - Bundle in electron
 
 ### Step 4 - Make an installer and distributing app 

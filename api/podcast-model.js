@@ -6,6 +6,6 @@ module.exports = {
     {
     title: Overwrite(),
     description: Overwrite(),
-    url: Overwrite() //soundcloud link
+    url: Overwrite() //soundcloud link for example
   }
 }

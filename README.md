@@ -4,6 +4,12 @@ Welcome!
 
 This page will be updated as the project goes along ~
 
+The etymology of the name BUTTCAST [ /bʌt/kæst/ ] stems from the protocol on which ButtCast runs, the gossiping protocol of [Scuttlebutt](https://scuttlebutt.nz/). The origin of the gaudy nature of the name also has it's roots in the culture of the Scuttlebutt community, where it (by some) is deemed desirable to have as non-commercial of an imagery in order to repel the creatures of the "crypto-bros".   
+
+<img src="./buttCastLogo.png" alt="drawing" width="300"/>
+
+*(image courtesy of [@mix](https://github.com/mixmix))*
+
 
 ## Purpose
 

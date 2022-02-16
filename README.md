@@ -4,7 +4,7 @@ Welcome!
 
 This page will be updated as the project goes along ~
 
-The etymology of the name BUTTCAST [ /bʌt/kæst/ ] stems from the protocol on which ButtCast runs, the gossiping protocol of [Scuttlebutt](https://scuttlebutt.nz/). The origin of the gaudy nature of the name also has it's roots in the culture of the Scuttlebutt community, where it (by some) is deemed desirable to have as non-commercial of an imagery in order to repel the creatures of the "crypto-bros".   
+The etymology of the name BUTTCAST [ /bʌt/kæst/ ] stems from the protocol on which ButtCast runs, the gossiping protocol of [Scuttlebutt](https://scuttlebutt.nz/)(SSB). The origin of the gaudy nature of the name also has it's roots in the culture of the Scuttlebutt community, where it (by some) is deemed desirable to have as non-commercial of an imagery in order to repel the creatures of the "crypto-bros".   
 
 <img src="./buttCastLogo.png" alt="drawing" width="300"/>
 
@@ -15,7 +15,7 @@ The etymology of the name BUTTCAST [ /bʌt/kæst/ ] stems from the protocol on w
 
 This project has three main purposes: 
 
-1. Make a cool app which enables people to async communicate with each other building on the distributed communication protocol SSB
+1. Make a cool app which enables people to async communicate with each other using audio clips, building on the distributed communication protocol SSB
 
 2. Serve as a way for me to learn how to code and build SSB apps
 

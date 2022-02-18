@@ -46,7 +46,8 @@ app.get('/comments/:podcastId', async (req, res) => {
               )
           ), toPromise() // whenever it has promised the await is waiting the responses
       )
-    const niceComments = comments.map(msg => {return { author:msg.value.author, comment: msg.value.content.comment.set,}})
+    const niceComments = comments.map(msg => {
+        return { author:msg.value.author, comment: msg.value.content.comment.set,}})
     res.send({comments:niceComments}) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb 
 })
 
@@ -55,22 +56,35 @@ app.get('/comments', async (req, res) => {
     const {where, and, slowEqual, type, toPromise }  = require('ssb-db2/operators') // enables the commands to be used
     const comments = await ssb.db.query( 
           where( // select inside the list with the requirements of multiple things, "and"
-              and( // two things need to be true   
-              slowEqual('value.content.comment.set', req.params.timestamp), // find a specific field //"value.content.timestamp.set" says what page in the book to look at and "req.params.timestamp" is what specific timestamp the comment has 
+              and( // two things need to be true  
                   type('comment') //specifically comments
               )
           ), toPromise() // whenever it has promised the await is waiting the responses
       )
-    const timelyComments = comments.map(msg => {return { author:msg.value.author, timeStamp.value.comment.set, comment: msg.value.content.comment.set,}})
+    const timelyComments = comments.map(msg => {
+        return { author:msg.value.author, timeStamp:msg.value.timestamp, comment: msg.value.content.comment.set,}})
     res.send({comments:timelyComments}) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb 
 })
 
+// in "author:msg.value.author" author is named as a variable with the message value of "author"
+
+
 // THE BASE FOR GETTING LIST OF PODCASTS
 
-app.get('/podcasts', async (req, res) => {
-  res.send({ data: podcast }) 
+app.get('/podcasts', async (req, res) => { 
+    const {where, and, slowEqual, type, toPromise }  = require('ssb-db2/operators') // enables the commands to be used
+    const podcast = await ssb.db.query( 
+          where( // select inside the list with the requirements of multiple things, "and"
+              and( // two things need to be true  
+                  type('podcast') //specifically comments
+              )
+          ), toPromise() // whenever it has promised the await is waiting the responses
+      )
+    const podcastOverview = podcast.map(msg => {
+        return { author:msg.value.author, timeStamp:msg.value.timestamp, podcast: msg.value.content.title.set, url:msg.value.content.url.set}
+    }) //the way ssb msg are structure is that the message "value" is the whole message. When you get a message from the network, it has standard properties (these are value). Everything you put in is "content", (such as message id, things generated when you make content)
+    res.send({comments:podcastOverview}) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb 
 })
-
 // Every app.get is like receiving a package
 
 // Every app.post is like sending a package
@@ -110,3 +124,5 @@ console.log('API running on http://localhost:3000/')
 // TASK for NEXT WEEK: 
 // - make a fetch for all the podcasts 
 // - Latest 10 comments no matter the podcast 
+// Crut support updating of things and "tombstoning" (deleting things)
+// REMEMBER TO RUN NEW CODE, ctrl+C in TERMINAL AND  "npm run dev" TO FETCH NEW CODE 

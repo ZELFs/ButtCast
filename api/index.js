@@ -136,13 +136,16 @@ app.post('/podcastUpdate', (req, res) => {
 // THIS IS THE BASE FOR UPDATING COMMENT POSTS
 
 app.post('/commentUpdate', (req, res) => { 
-  const { commentId, description } = req.body
-// my thinking is that it has to update the podcastId, check if it can find it and if it does find it replace it with the newPodcastID    
-  commentCrut.update(commentId, { description }, (err) => {
+  const { commentId, comment } = req.body
+// my thinking is that it has to update the podcastId, check if it can find it and if it does find it replace it with the newPodcastID 
+  console.log('You got the ${commentId}')
+  commentCrut.update(commentId, { comment }, (err) => {
+        console.log(`got ${err}`)
       commentCrut.read(commentId, (err, updatedComment) => {
         if (err) res.send(err) 
-        else res.send({id:commentId, message: `Your comment ID is ${commentId} and the comment has been updated`, description})  // 000 where is the podcast ID defined?
+        else res.send({id:commentId, message: `Your comment ID is ${commentId} and the comment has been updated`, comment})  // 000 where is the podcast ID defined?
         // 000 where are the podcasts stored? what defines it as "podcasts"    
+        console.log(`got 2 ${err}`)
       }) 
 })
 }) 
@@ -164,7 +167,6 @@ app.post('/podcastTombstone', (req, res) => {
 
 app.post('/commentTombstone', (req, res) => { 
   const { commentId, podcastId } = req.body
-
   commentCrut.tombstone(commentId, {}, (err) => {
     if (err) res.send(err) 
     else res.send({id: commentId, message: `You have removed the following comment "${commentId}" from the podcast with the following ID: ${podcastId}` }) // tombstones the comment?????

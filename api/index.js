@@ -53,23 +53,89 @@ app.get('/comments/:podcastId', async (req, res) => {
 })
 
 
-// THIS ONE IS THE BASE FOR GETTING LIST OF 10 LATEST COMMENTS
+// THIS ONE IS THE BASE FOR GETTING ALL COMMENTS
 app.get('/comments', async (req, res) => { 
     const {where, and, slowEqual, type, toPromise }  = require('ssb-db2/operators') // enables the commands to be used
-    const comments = await ssb.db.query( 
+    let comments = await ssb.db.query( // used to be "const" instead of "let"
           where( // select inside the list with the requirements of multiple things, "and"
               and( // two things need to be true  
                   type('comment') //specifically comments
               )
           ), toPromise() // whenever it has promised the await is waiting the responses
       )
+    comments = comments.filter(msg => {
+        return msg.value.content.tangles.comment.root === null // comparing to see if it's equal, if it is, then true 
+    }) // filter works on arrays, only keeps some elements if it returns true you want to keep it if it returns false, you don't want to keep the messages of the array
+    
+    comments = await Promise.all(comments.map(msg => commentCrut.read(msg.key))) // with each of these messages, use crut to load the comments, please! 
+    
+    /*
+    const timelyComments = comments.map(msg => {
+        return { 
+            id: msg.key, 
+            author:msg.value.author,
+            timeStamp:msg.value.timestamp,
+            comment:msg.value.content.comment.set
+        }
+    }) */
+    res.send({comments}) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb 
+})
+
+/*
+
+// THIS ONE IS THE BASE FOR GETTING 10 LATEST COMMENTS
+app.get('/comments', async (req, res) => { 
+    const {where, and, slowEqual, type, toPromise }  = require('ssb-db2/operators') // enables the commands to be used
+    const comments = await ssb.db.query // calls on things in ssb.db, uses jitdb 
+    ( 
+          where( // select inside the list with the requirements of multiple things, "and"
+              and( // two things need to be true  
+                  type('comment') //specifically comments
+              )
+          ), toPromise() // whenever it has promised the await is waiting the responses
+      )
+    
+    // comments.map is an array, look up how to get 10 latest of array 
     const timelyComments = comments.map(msg => {
         return { id: msg.key, author:msg.value.author, timeStamp:msg.value.timestamp, comment: msg.value.content.comment.set,}})
     res.send({comments:timelyComments}) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb 
 })
 
+// nicer solution is https://github.com/ssb-ngi-pointer/jitdb#pagination - let's you call 10 msgs at a time, can also do oldest first 
+
 // in "author:msg.value.author" author is named as a variable with the message value of "author"
 
+
+
+// THIS ONE IS THE BASE FOR GETTING 10 LATEST COMMENTS (based on Javascrpit array sorting)
+app.get('/comments', async (req, res) => { 
+    const {where, and, slowEqual, type, toPromise }  = require('ssb-db2/operators') // enables the commands to be used
+    const comments = await ssb.db.query // calls on things in ssb.db, uses jitdb 
+    ( 
+          where( // select inside the list with the requirements of multiple things, "and"
+              and( // two things need to be true  
+                  type('comment') //specifically comments
+              )
+          ), toPromise() // whenever it has promised the await is waiting the responses
+      )
+    
+    
+ 
+    comments = arr.sort((a, b) => a > b ? -1 : 1);
+    console.log(comments); 
+    
+    
+    // comments.map is an array, look up how to get 10 latest of array 
+    const timelyComments = comments.map(msg => {
+        return { id: msg.key, author:msg.value.author, timeStamp:msg.value.timestamp, comment: msg.value.content.comment.set,}})
+    res.send({comments:timelyComments}) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb 
+})
+
+// nicer solution is https://github.com/ssb-ngi-pointer/jitdb#pagination - let's you call 10 msgs at a time, can also do oldest first 
+
+// in "author:msg.value.author" author is named as a variable with the message value of "author"
+
+/*
 
 // THE BASE FOR GETTING LIST OF PODCASTS
 
@@ -90,7 +156,7 @@ app.get('/podcasts', async (req, res) => {
 // Every app.get is like receiving a package
 
 // Every app.post is like sending a package
-
+*/
 
 // THIS IS THE BASE FOR MAKING PODCAST POSTS
 
@@ -115,7 +181,6 @@ app.post('/comment', (req, res) => {
     else res.send({id: commentId, message: `Your comment ID is ${commentId} and your podcast ID is ${podcastId}` })
   })
 })
-
 
 
 // THIS IS THE BASE FOR UPDATING PODCAST POSTS
@@ -196,4 +261,11 @@ console.log('API running on http://localhost:3000/')
 // Crut support updating of things and "tombstoning" (deleting things)
 // REMEMBER TO RUN NEW CODE, ctrl+C in TERMINAL AND  "npm run dev" TO FETCH NEW CODE 
 // https://gitlab.com/ahau/lib/ssb-crut
+
+/*
+  paginate(10),
+  startFrom(15),
+  descending(),
+*/
+
 

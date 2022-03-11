@@ -11,6 +11,7 @@ const SSB = require('../ssb') // ".." goes backwards to the ssb.js file that is 
 const podcastModel = require('./podcast-model') // related to the crut framework, it tells the crut how it should be able to work with "podcasts", could also be "gatherings" or "posts", hypothetically. It automatically knows that it's a .json so no need to write out
 
 const commentModel = require('./commentModel') // links to the dependancies for the object Comment (which is created later on) in this case "commentModel"
+const { length } = require('ssb-db2')
 
 // all above is just setting up what we're using, the following is starting to use it
 
@@ -55,6 +56,8 @@ app.get('/comments/:podcastId', async (req, res) => {
   res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
 })
 
+
+
 // THIS ONE IS THE BASE FOR GETTING ALL COMMENTS
 app.get('/comments', async (req, res) => {
   const { where, and, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
@@ -70,38 +73,30 @@ app.get('/comments', async (req, res) => {
   }) // filter works on arrays, only keeps some elements if it returns true you want to keep it if it returns false, you don't want to keep the messages of the array
 
   comments = await Promise.all(comments.map(msg => commentCrut.read(msg.key))) // with each of these messages, use crut to load the comments, please!
-
-  /*
-    const timelyComments = comments.map(msg => {
-        return {
-            id: msg.key,
-            author:msg.value.author,
-            timeStamp:msg.value.timestamp,
-            comment:msg.value.content.comment.set
-        }
-    }) */
   res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
 })
 
-// THIS ONE IS THE BASE FOR GETTING 10 LATEST COMMENTS
-app.get('/comments', async (req, res) => {
-  const { where, and, slowEqual, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
-  const comments = await ssb.db.query
-  // calls on things in ssb.db, uses jitdb
-  (
+
+
+// THIS ONE IS THE BASE FOR GETTING 10 LATEST COMMENTS (using crut)
+app.get('/10LatestCommentsCrut', async (req, res) => {
+  const { where, and, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
+  let comments = await ssb.db.query( // used to be "const" instead of "let"
     where( // select inside the list with the requirements of multiple things, "and"
       and( // two things need to be true
         type('comment') // specifically comments
       )
     ), toPromise() // whenever it has promised the await is waiting the responses
   )
+  comments = comments.filter(msg => {
+    return msg.value.content.tangles.comment.root === null // comparing to see if it's equal, if it is, then true
+  }) // filter works on arrays, only keeps some elements if it returns true you want to keep it if it returns false, you don't want to keep the messages of the array
 
-  // comments.map is an array, look up how to get 10 latest of array
-  const timelyComments = comments.map(msg => {
-    return { id: msg.key, author: msg.value.author, timeStamp: msg.value.timestamp, comment: msg.value.content.comment.set }
-  })
-  res.send({ comments: timelyComments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
+  comments = await Promise.all(comments.map(msg => commentCrut.read(msg.key))) // with each of these messages, use crut to load the comments, please!
+  const latestComments = commentCrut.length(comments.length - 10)
+  res.send({ latestComments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
 })
+
 
 // nicer solution is https://github.com/ssb-ngi-pointer/jitdb#pagination - let's you call 10 msgs at a time, can also do oldest first
 
@@ -126,7 +121,7 @@ app.get('/10LatestComments', async (req, res) => {
 
   comments = await Promise.all(comments.map(msg => commentCrut.read(msg.key))) // with each of these messages, use crut to load the comments, please!
   let latestComments = comments[comments.length >= 10]
-  console.log(latestComments) // 000 I understand that I'm getting the empty brackets error here due to there being an empty comment, I would have to run it through crut to load the comments as above, yet I'm not sure how to impliment.I will try to impliment it in crut entirely now...
+  console.log(latestComments) // 000 I understand that I'm getting the empty brackets error here due to there being an empty comment, I would have to run it through crut to load the comments as above, yet I'm not sure how to impliment.I will try to impliment it in crut entirely now... I could also do this with loops but I haven't figured out exactly how yet...
         /*
     const timelyComments = comments.map(msg => {
         return {
@@ -255,13 +250,10 @@ app.listen(3000) // listens to local host port 3000
 console.log('API running on http://localhost:3000/')
 
 // TASK for NEXT WEEK:
-// - Make tombstone for comments
-// - Make updates for comments
 
-// WHY IT NOT WORKY?
 
 // - Latest 10 comments no matter the podcast (won't work unless we reorder the )
-// - Mock up of UX
+
 // NEXT SESSION
 // - getting the latest version of the podcast
 

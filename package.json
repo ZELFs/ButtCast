@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node api/index.js"
+    "dev": "node api/index.js", 
+    "lint": "standard --fix"
   },
   "keywords": [],
   "author": "",

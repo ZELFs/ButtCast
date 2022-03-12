@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node api/index.js", 
+    "dev": "nodemon index.js",
+    "test": "npm run test:js && npm run lint",
+    "test:js": "tape 'test/**/*.test.js' | tap-spec",
     "lint": "standard --fix"
   },
   "keywords": [],
@@ -21,6 +23,10 @@
     "ssb-keys": "^8.2.0"
   },
   "devDependencies": {
-    "standard": "^16.0.4"
+    "axios": "^0.26.1",
+    "nodemon": "^2.0.15",
+    "standard": "^16.0.4",
+    "tap-spec": "^5.0.0",
+    "tape": "^5.5.2"
   }
 }

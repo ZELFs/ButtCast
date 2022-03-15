@@ -38,23 +38,19 @@ Here we will present some of the building blocks needed to build an SSB app:
 
 ##### Install Electron
 - Install [electron](https://www.electronjs.org/) 
-- API base in insomnia
-- Enables us to package the application
+- Electron enables us to package the application
 
 ##### Install Insomia 
-
-- API base in [insomnia](https://insomnia.rest/download
-)
-- Enables us to build in the "normal flow" of building applications
-- Splits out the front end from the back-end. Enables two groups to work on it, front end(browser based) and back-end (insomnia).
+- Insomnia enables us to easily work with the backend through simulating a front end with APIs
+- Install [insomnia](https://insomnia.rest/download)
 
 Check Insomnia_scripts.json for examples
 
 ![](./insomnia.jpg)
 
-It is also possible to build directly in the browser yet that will not part of this guide.
+It is also possible to build directly in the browser yet that will not be a part of this guide.
 
-#### Best practices 
+#### Best practices
 - Have commit history 
 - Commit tidy bundles
 

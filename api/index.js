@@ -91,10 +91,8 @@ app.get('/10LatestCommentsCrut', async (req, res) => {
   comments = comments.filter(msg => {
     return msg.value.content.tangles.comment.root === null // comparing to see if it's equal, if it is, then true
   }) // filter works on arrays, only keeps some elements if it returns true you want to keep it if it returns false, you don't want to keep the messages of the array
-
-  comments = await Promise.all(comments.map(msg => commentCrut.read(msg.key))) // with each of these messages, use crut to load the comments, please!
-  const latestComments = commentCrut.length(comments.length - 10)
-  res.send({ latestComments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
+  comments = comments.slice(-10)
+  res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
 })
 
 

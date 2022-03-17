@@ -46,6 +46,8 @@ Now - let's dive into how to build an app!
 
 ### Step 0 - Setting up the base
 
+Create the folder for your project, such as "MyApp". Add the "[package.json](https://github.com/ZELFs/ButtCast/blob/master/package.json)" file. If you want to you can also manually install all the packages over "npm install" in terminal, but there's no need to now as this package comes pre-packed!  
+
 #### Installing stuff
 Here we will present some of the building blocks needed to build an SSB app:
 
@@ -79,12 +81,9 @@ In this tutorial we will be using the newly developed feature of SSB called "Met
 
 
 #### Crut
-
 Crut is a recent development in the Scuttle-verse (as some would call it) and enables "tombstoning" and updating posts, which previously wasn't possible due to the append-only logs. As based on the common acronym CRUD (Create, Read, Update, Delete) yet without "Delete", instead there's T for Tombstone CRUT! Read more about how [Crut](https://gitlab.com/ahau/lib/ssb-crut) works here.
 
 #### Setting up the base for an SSB app
-
-### 000 missing link to files for getting started!
 
 The following is a base to set up for any kind of app you would like to build.
 
@@ -130,8 +129,10 @@ There are many more API's you can build, one highlighted tip is to go through th
 
 Missing (!)
 
+ssb.con.connect.(give it an address, for example a function) 
 
-### UI Design
+
+### Front-End - UI Design
 
 #### UI Scetches
 Start with some scetches of the functionality, there are many programs which enable this, such as [Figma](https://www.figma.com/) or [Miro](https://www.figma.com/), in the case below, Miro was used to make a scetch. Remember, don't over-design anything, finish it to 80% so that you have an overview of what kind of functionality will be needed, the rest will also fall into place as you continue building the back-end.
@@ -140,7 +141,7 @@ Start with some scetches of the functionality, there are many programs which ena
 
 
 #### Building the UI
-Now that we have a scetch, we need to start building the design. Many people enjoy working with React and this is what we recommend here as well. 
+Now that we have a scetch, we need to start building the design. Many people enjoy working with React and this is what we recommend here as well. Here is a nice guide for [building an app with React](https://create-react-app.dev/docs/getting-started/)
 
 
 ### Bundle in Electron

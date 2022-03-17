@@ -259,6 +259,8 @@ console.log('API running on http://localhost:3000/')
 // REMEMBER TO RUN NEW CODE, ctrl+C in TERMINAL AND  "npm run dev" TO FETCH NEW CODE
 // https://gitlab.com/ahau/lib/ssb-crut
 
+// got started with UI via: https://create-react-app.dev/docs/getting-started/ 
+
 // npm run lint to clean up code :)
 
 /*

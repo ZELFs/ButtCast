@@ -29,7 +29,48 @@ The idea of the app is an asynchronous conversation app. The general design is i
 
 ![](./AppVisualizing.jpg)
 
-## The Guide
+---
+
+## Development Setup
+
+Clone down this repo, then install the modules:
+```bash
+npm install
+```
+
+Start the API in dev-mode:
+```bash
+npm run dev
+```
+
+For testing:
+```bash
+npm test
+```
+
+## API
+
+  | ROUTE                  | HTTP METHOD | PURPOSE
+--|------------------------|-------------|---------------------------
+✓ | /podcast               | GET         | Get all podcasts
+✓ | /podcast               | POST        | Create a new podcast
+  | /podcast/:id           | GET         | Get a particular podcast
+✓ | /podcast/:id           | PUT         | Update a particular podcast
+✓ | /podcast/:id           | DELETE      | Tombstone a particular podcast
+  |                        |             |
+  | /podcast/:id/comment   | GET         | Get all comment associated with a particular podcast
+✓ | /podcast/:id/comment   | POST        | Create a comment associated with a particular podcast
+  |                        |             |
+✓ | /comment               | GET         | Get all podcasts
+✓ | /comment/:id           | GET         | Get a particular comment
+✓ | /comment/:id           | PUT         | Update a particular comment
+✓ | /comment/:id           | DELETE      | Tombstone a particular comment
+
+If you want to get the ten latest comments you can use queries e.g.  `GET` to `/comment?limit=10`
+
+---
+
+## The Guide (Roadmap)
 
 ### Intro to SSB
 Secure Scuttlebutt (SSB) is an offline-first communications protocol, also known as "The gossiping protocol". SSB works in a similar way to how people share data among each other, if your friend tells you something, you now have that information, and can tell it forwards to other friends, unless it was said in private of course! 

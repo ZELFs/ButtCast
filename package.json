@@ -15,11 +15,11 @@
   "dependencies": {
     "@tangle/overwrite": "^2.1.0",
     "express": "^4.17.1",
-    "jitdb": "^3.5.2",
+    "jitdb": "^6.0.0",
     "secret-stack": "^6.4.0",
     "ssb-caps": "^1.1.0",
-    "ssb-crut": "^3.2.1",
-    "ssb-db2": "^2.8.1",
+    "ssb-crut": "^4.2.0",
+    "ssb-db2": "^3.1.0",
     "ssb-keys": "^8.2.0"
   },
   "devDependencies": {

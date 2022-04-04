@@ -24,6 +24,78 @@ module.exports = function startAPI (ssb, PORT = 3000) {
     res.send({ data: ssb.id }) // request and respond, shows what ID is in ssb. In this case we use a test SSB ID. To see how to interact, search express.js https://expressjs.com/en/starter/hello-world.html
   })
 
+  // THIS IS THE BASE FOR MAKING PODCAST POSTS
+
+  app.post('/podcast', (req, res) => {
+    podcast.create(req.body, (err, podcastId) => {
+      if (err) res.status(500).send(err.message)
+      else res.send({ id: podcastId, message: `Your podcast ID is ${podcastId}` }) // 000 where is the podcast ID defined?
+      // 000 where are the podcasts stored? what defines it as "podcasts"
+    })
+  })
+
+  // THIS IS THE BASE FOR MAKING COMMENT POSTS
+
+  app.post('/podcast/:id/comment', (req, res) => {
+    const { id } = req.params
+    const { comment } = req.body
+
+    comment.create({ comment, podcastId: id }, (err, commentId) => { // here is where it changes, it needs to reference the previous podcast ID as well as create a new ID. This means that the code should be a part of the "podcast" section I believe
+      if (err) res.send(err)
+      else res.send({ id: commentId, message: `Your comment ID is ${commentId} and your podcast ID is ${id}` })
+    })
+  })
+
+  // THE BASE FOR GETTING LIST OF PODCASTS
+
+  app.get('/podcasts', async (req, res) => {
+    podcast.list({}, (err, podcasts) => {
+      if (err) res.status(500).send(err.message)
+      else res.send({ podcasts })
+    })
+  })
+
+  // Every app.get is like receiving a package
+
+  // Every app.post is like sending a package
+
+  // THIS ONE IS THE BASE FOR GETTING ALL COMMENTS
+
+  app.get('/comments', async (req, res) => {
+    comment.list({}, (err, comments) => {
+      if (err) res.status(500).send(err.message)
+      else res.send({ comments })
+    })
+  })
+
+  /*
+  app.get('/comment', async (req, res) => {
+    const { where, and, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
+    let comments = await ssb.db.query( // used to be "const" instead of "let"
+      where( // select inside the list with the requirements of multiple things, "and"
+        and( // two things need to be true
+          type('comment') // specifically comments
+        )
+      ), toPromise() // whenever it has promised the await is waiting the responses
+    )
+    comments = comments.filter(msg => {
+      return msg.value.content.tangles.comment.root === null // comparing to see if it's equal, if it is, then true
+    }) // filter works on arrays, only keeps some elements if it returns true you want to keep it if it returns false, you don't want to keep the messages of the array
+
+    if (req.query.limit) comments = comments.slice(0, req.query.limit)
+
+    comments = await Promise.all(comments.map(msg => comment.read(msg.key))) // with each of these messages, use crut to load the comments, please!
+    res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
+  }) */
+
+  // needs to contain req.query.limit comment.list({ limit: req.query.limit }, (err, ....
+
+  // req.query.limit means that you
+
+  // nicer solution is https://github.com/ssb-ngi-pointer/jitdb#pagination - let's you call 10 msgs at a time, can also do oldest first
+
+  // in "author:msg.value.author" author is named as a variable with the message value of "author"
+
   // THIS ONE IS THE BASE FOR GETTING COMMENTS FOR SPECIFIC PODCAST
 
   // app.get defines the function for the remaining usage where one can for example call comments/15 or comments/7 to call for podcast nr 15 or nr 7
@@ -46,30 +118,6 @@ module.exports = function startAPI (ssb, PORT = 3000) {
           return { author:msg.value.author, comment: msg.value.content.comment.set,}}) */
     res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
   })
-
-  // THIS ONE IS THE BASE FOR GETTING ALL COMMENTS
-  app.get('/comment', async (req, res) => {
-    const { where, and, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
-    let comments = await ssb.db.query( // used to be "const" instead of "let"
-      where( // select inside the list with the requirements of multiple things, "and"
-        and( // two things need to be true
-          type('comment') // specifically comments
-        )
-      ), toPromise() // whenever it has promised the await is waiting the responses
-    )
-    comments = comments.filter(msg => {
-      return msg.value.content.tangles.comment.root === null // comparing to see if it's equal, if it is, then true
-    }) // filter works on arrays, only keeps some elements if it returns true you want to keep it if it returns false, you don't want to keep the messages of the array
-
-    if (req.query.limit) comments = comments.slice(0, req.query.limit)
-
-    comments = await Promise.all(comments.map(msg => comment.read(msg.key))) // with each of these messages, use crut to load the comments, please!
-    res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
-  })
-
-  // nicer solution is https://github.com/ssb-ngi-pointer/jitdb#pagination - let's you call 10 msgs at a time, can also do oldest first
-
-  // in "author:msg.value.author" author is named as a variable with the message value of "author"
 
   /*
 
@@ -109,50 +157,6 @@ module.exports = function startAPI (ssb, PORT = 3000) {
   // nicer solution is https://github.com/ssb-ngi-pointer/jitdb#pagination - let's you call 10 msgs at a time, can also do oldest first
 
   // in "author:msg.value.author" author is named as a variable with the message value of "author"
-
-  // THE BASE FOR GETTING LIST OF PODCASTS
-
-  app.get('/podcast', async (req, res) => {
-    const { where, and, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
-    let podcasts = await ssb.db.query(
-      where( // select inside the list with the requirements of multiple things, "and"
-        and( // two things need to be true
-          type('podcast') // specifically comments
-        )
-      ), toPromise() // whenever it has promised the await is waiting the responses
-    )
-
-    podcasts = podcasts.filter(msg => {
-      return msg.value.content.tangles.podcast.root === null // comparing to see if it's equal, if it is, then true
-    })
-    podcasts = await Promise.all(podcasts.map(msg => podcast.read(msg.key))) // with each of these messages, use crut to load the comments, please!
-    res.send({ podcasts }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
-  })
-  // Every app.get is like receiving a package
-
-  // Every app.post is like sending a package
-
-  // THIS IS THE BASE FOR MAKING PODCAST POSTS
-
-  app.post('/podcast', (req, res) => {
-    podcast.create(req.body, (err, podcastId) => {
-      if (err) res.status(500).send(err.message)
-      else res.send({ id: podcastId, message: `Your podcast ID is ${podcastId}` }) // 000 where is the podcast ID defined?
-      // 000 where are the podcasts stored? what defines it as "podcasts"
-    })
-  })
-
-  // THIS IS THE BASE FOR MAKING COMMENT POSTS
-
-  app.post('/podcast/:id/comment', (req, res) => {
-    const { id } = req.params
-    const { comment } = req.body
-
-    comment.create({ comment, podcastId: id }, (err, commentId) => { // here is where it changes, it needs to reference the previous podcast ID as well as create a new ID. This means that the code should be a part of the "podcast" section I believe
-      if (err) res.send(err)
-      else res.send({ id: commentId, message: `Your comment ID is ${commentId} and your podcast ID is ${id}` })
-    })
-  })
 
   // THIS IS THE BASE FOR UPDATING PODCAST POSTS
 
@@ -232,7 +236,7 @@ module.exports = function startAPI (ssb, PORT = 3000) {
 // REMEMBER TO RUN NEW CODE, ctrl+C in TERMINAL AND  "npm run dev" TO FETCH NEW CODE
 // https://gitlab.com/ahau/lib/ssb-crut
 
-// got started with UI via: https://create-react-app.dev/docs/getting-started/ 
+// got started with UI via: https://create-react-app.dev/docs/getting-started/
 
 // npm run lint to clean up code :)
 

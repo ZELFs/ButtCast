@@ -46,6 +46,8 @@ Now - let's dive into how to build an app!
 
 ### Step 0 - Setting up the base
 
+Create the folder for your project, such as "MyApp". Add the "[package.json](https://github.com/ZELFs/ButtCast/blob/master/package.json)" file. If you want to you can also manually install all the packages over "npm install" in terminal, but there's no need to now as this package comes pre-packed!  
+
 #### Installing stuff
 Here we will present some of the building blocks needed to build an SSB app:
 
@@ -82,11 +84,6 @@ In this tutorial we will be using the newly developed feature of SSB called "Met
 Crut is a recent development in the Scuttle-verse (as some would call it) and enables "tombstoning" and updating posts, which previously wasn't possible due to the append-only logs. As based on the common acronym CRUD (Create, Read, Update, Delete) yet without "Delete", instead there's T for Tombstone CRUT! Read more about how [Crut](https://gitlab.com/ahau/lib/ssb-crut) works here.
 
 #### Setting up the base for an SSB app
-
-Create the folder for your project
-Add "package.json"
-
-### 000 missing link to files for getting started!
 
 The following is a base to set up for any kind of app you would like to build.
 

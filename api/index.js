@@ -70,16 +70,15 @@ module.exports = function startAPI (ssb, PORT = 3000) {
 
   // /comment?limit=10 for front end quering 
 
-
   // needs to contain req.query.limit comment.list({ limit: req.query.limit }, (err, ....
 
   // req.query.limit means that you
 
-  // nicer solution is https://github.com/ssb-ngi-pointer/jitdb#pagination - let's you call 10 msgs at a time, can also do oldest first
-
   // in "author:msg.value.author" author is named as a variable with the message value of "author"
 
   // THIS ONE IS THE BASE FOR GETTING COMMENTS FOR SPECIFIC PODCAST
+
+  // This one is a bit strange and will need to be updated. Anders will fiddle with it to find the best solution.
 
   // app.get defines the function for the remaining usage where one can for example call comments/15 or comments/7 to call for podcast nr 15 or nr 7
   app.get('/comment/:id', (req, res) => {
@@ -102,55 +101,8 @@ module.exports = function startAPI (ssb, PORT = 3000) {
     res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
   })
 
- // IM WORKIN ON IT, OK? :')
-  app.get('/comment/:id', async (req , res) => {
-    comment.list({}, (err, comments) => {
-      if (err) res.status(500).send(err.message)
-      else res.send({ comments })
-    })
-  }) 
-
   // THIS ONE IS THE BASE FOR GETTING 10 LATEST COMMENTS (based on Javascrpit array sorting) I*M LOST GAH
-/*
-  app.get('/10LatestComments', async (req, res) => {
-    app.get(comment.list({limit:req.query.limit}, (err, comment))
-  })
 
-*/
-  app.get('/10LatestComments', async (req, res) => {
-    const { where, and, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
-    let comments = await ssb.db.query( // used to be "const" instead of "let"
-      where( // select inside the list with the requirements of multiple things, "and"
-        and( // two things need to be true
-          type('comment') // specifically comments
-        )
-      ), toPromise() // whenever it has promised the await is waiting the responses
-    )
-    comments = comments.filter(msg => {
-      return msg.value.content.tangles.comment.root === null // comparing to see if it's equal, if it is, then true
-    }) // filter works on arrays, only keeps some elements if it returns true you want to keep it if it returns false, you don't want to keep the messages of the array
-
-    comments = await Promise.all(comments.map(msg => comment.read(msg.key))) // with each of these messages, use crut to load the comments, please!
-    let latestComments = comments[comments.length >= 10]
-    console.log(latestComments) // 000 I understand that I'm getting the empty brackets error here due to there being an empty comment, I would have to run it through crut to load the comments as above, yet I'm not sure how to impliment.I will try to impliment it in crut entirely now... I could also do this with loops but I haven't figured out exactly how yet...
-          /*
-      const timelyComments = comments.map(msg => {
-          return {
-              id: msg.key,
-              author:msg.value.author,
-              timeStamp:msg.value.timestamp,
-              comment:msg.value.content.comment.set
-          }
-      }) /*
-    res.send({ latestComments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
-  })
-  */
-
-  // comments = arr.sort((a, b) => a > b ? -1 : 1) // (sorts decending)
-
-  // nicer solution is https://github.com/ssb-ngi-pointer/jitdb#pagination - let's you call 10 msgs at a time, can also do oldest first
-
-  // in "author:msg.value.author" author is named as a variable with the message value of "author"
 
   // THIS IS THE BASE FOR UPDATING PODCAST POSTS
 

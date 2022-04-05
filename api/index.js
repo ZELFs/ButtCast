@@ -48,7 +48,7 @@ module.exports = function startAPI (ssb, PORT = 3000) {
 
   // THE BASE FOR GETTING LIST OF PODCASTS
 
-  app.get('/podcasts', async (req, res) => {
+  app.get('/podcasts', (req, res) => {
     podcast.list({}, (err, podcasts) => {
       if (err) res.status(500).send(err.message)
       else res.send({ podcasts })
@@ -61,32 +61,15 @@ module.exports = function startAPI (ssb, PORT = 3000) {
 
   // THIS ONE IS THE BASE FOR GETTING ALL COMMENTS
 
-  app.get('/comments', async (req, res) => {
+  app.get('/comments', (req, res) => {
     comment.list({}, (err, comments) => {
       if (err) res.status(500).send(err.message)
       else res.send({ comments })
     })
   })
 
-  /*
-  app.get('/comment', async (req, res) => {
-    const { where, and, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
-    let comments = await ssb.db.query( // used to be "const" instead of "let"
-      where( // select inside the list with the requirements of multiple things, "and"
-        and( // two things need to be true
-          type('comment') // specifically comments
-        )
-      ), toPromise() // whenever it has promised the await is waiting the responses
-    )
-    comments = comments.filter(msg => {
-      return msg.value.content.tangles.comment.root === null // comparing to see if it's equal, if it is, then true
-    }) // filter works on arrays, only keeps some elements if it returns true you want to keep it if it returns false, you don't want to keep the messages of the array
+  // /comment?limit=10 for front end quering 
 
-    if (req.query.limit) comments = comments.slice(0, req.query.limit)
-
-    comments = await Promise.all(comments.map(msg => comment.read(msg.key))) // with each of these messages, use crut to load the comments, please!
-    res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
-  }) */
 
   // needs to contain req.query.limit comment.list({ limit: req.query.limit }, (err, ....
 
@@ -99,7 +82,7 @@ module.exports = function startAPI (ssb, PORT = 3000) {
   // THIS ONE IS THE BASE FOR GETTING COMMENTS FOR SPECIFIC PODCAST
 
   // app.get defines the function for the remaining usage where one can for example call comments/15 or comments/7 to call for podcast nr 15 or nr 7
-  app.get('/comment/:id', async (req, res) => {
+  app.get('/comment/:id', (req, res) => {
     const { where, and, slowEqual, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
     let comments = await ssb.db.query(
       where( // select inside the list with the requirements of multiple things, "and"
@@ -119,10 +102,21 @@ module.exports = function startAPI (ssb, PORT = 3000) {
     res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
   })
 
-  /*
+ // IM WORKIN ON IT, OK? :')
+  app.get('/comment/:id', async (req , res) => {
+    comment.list({}, (err, comments) => {
+      if (err) res.status(500).send(err.message)
+      else res.send({ comments })
+    })
+  }) 
 
-  // THIS ONE IS THE BASE FOR GETTING 10 LATEST COMMENTS (based on Javascrpit array sorting)
+  // THIS ONE IS THE BASE FOR GETTING 10 LATEST COMMENTS (based on Javascrpit array sorting) I*M LOST GAH
+/*
+  app.get('/10LatestComments', async (req, res) => {
+    app.get(comment.list({limit:req.query.limit}, (err, comment))
+  })
 
+*/
   app.get('/10LatestComments', async (req, res) => {
     const { where, and, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
     let comments = await ssb.db.query( // used to be "const" instead of "let"

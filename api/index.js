@@ -5,6 +5,7 @@
 /* STATES THE FUNCTIONS WE WILL USE */
 
 const express = require('express') // the way you include libraries, aka code other people made. Express is our webserver thingy.
+const req = require('express/lib/request')
 
 // all above is just setting up what we're using, the following is starting to use it
 
@@ -62,17 +63,19 @@ module.exports = function startAPI (ssb, PORT = 3000) {
   // THIS ONE IS THE BASE FOR GETTING ALL COMMENTS
 
   app.get('/comments', (req, res) => {
-    comment.list({}, (err, comments) => {
+    comment.list({ limit: req.query.limit }, (err, comments) => {
       if (err) res.status(500).send(err.message)
       else res.send({ comments })
     })
+  console.log(req.query.limit)
   })
 
-  // /comment?limit=10 for front end quering 
+
+  // /comments?limit=10 for front end quering 
 
   // needs to contain req.query.limit comment.list({ limit: req.query.limit }, (err, ....
 
-  // req.query.limit means that you
+  // req.query.limit means that you request a limit of something 
 
   // in "author:msg.value.author" author is named as a variable with the message value of "author"
 
@@ -81,7 +84,7 @@ module.exports = function startAPI (ssb, PORT = 3000) {
   // This one is a bit strange and will need to be updated. Anders will fiddle with it to find the best solution.
 
   // app.get defines the function for the remaining usage where one can for example call comments/15 or comments/7 to call for podcast nr 15 or nr 7
-  app.get('/comment/:id', (req, res) => {
+  app.get('/comment/:id', async (req, res) => {
     const { where, and, slowEqual, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
     let comments = await ssb.db.query(
       where( // select inside the list with the requirements of multiple things, "and"

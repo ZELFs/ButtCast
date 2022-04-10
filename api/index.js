@@ -39,9 +39,9 @@ module.exports = function startAPI (ssb, PORT = 3000) {
 
   app.post('/podcast/:id/comment', (req, res) => {
     const { id } = req.params
-    const { comment } = req.body
 
-    comment.create({ comment, podcastId: id }, (err, commentId) => { // here is where it changes, it needs to reference the previous podcast ID as well as create a new ID. This means that the code should be a part of the "podcast" section I believe
+    comment.create({ comment: req.body.comment, podcastId: id }, (err, commentId) => { // here is where it changes, it needs to reference the previous podcast ID as well as create a new ID. This means that the code should be a part of the "podcast" section I believe
+      console.log("err", err, commentId)
       if (err) res.send(err)
       else res.send({ id: commentId, message: `Your comment ID is ${commentId} and your podcast ID is ${id}` })
     })
@@ -81,31 +81,16 @@ module.exports = function startAPI (ssb, PORT = 3000) {
 
   // THIS ONE IS THE BASE FOR GETTING COMMENTS FOR SPECIFIC PODCAST
 
-  // This one is a bit strange and will need to be updated. Anders will fiddle with it to find the best solution.
+  app.get('/comment/:podcastId', async (req, res) => {
+    function podcastFilter(comment) {
+      return comment.podcastId === req.params.podcastId
+    }
 
-  // app.get defines the function for the remaining usage where one can for example call comments/15 or comments/7 to call for podcast nr 15 or nr 7
-  app.get('/comment/:id', async (req, res) => {
-    const { where, and, slowEqual, type, toPromise } = require('ssb-db2/operators') // enables the commands to be used
-    let comments = await ssb.db.query(
-      where( // select inside the list with the requirements of multiple things, "and"
-        and( // two things need to be true
-          slowEqual('value.content.podcastId.set', req.params.id), // find a specific field //"value.content.podcastId.set" says what page in the book to look at and "req.params.podcastId" is what specific podcast ID it is
-          type('comment') // specifically comments
-        )
-      ), toPromise() // whenever it has promised the await is waiting the responses
-    )
-    comments = comments.filter(msg => {
-      return msg.value.content.tangles.comment.root === null // comparing to see if it's equal, if it is, then true
+    comment.list({ filter: podcastFilter }, (err, comments) => {
+      if (err) res.status(500).send(err.message)
+      else res.send({ comments })
     })
-    comments = await Promise.all(comments.map(msg => comment.read(msg.key))) // with each of these messages, use crut to load the comments, please!
-    /*
-      const niceComments = comments.map(msg => {
-          return { author:msg.value.author, comment: msg.value.content.comment.set,}}) */
-    res.send({ comments }) // only gives back the comment text, could also show author, which is automatically added to the messages in ssb
   })
-
-  // THIS ONE IS THE BASE FOR GETTING 10 LATEST COMMENTS (based on Javascrpit array sorting) I*M LOST GAH
-
 
   // THIS IS THE BASE FOR UPDATING PODCAST POSTS
 
